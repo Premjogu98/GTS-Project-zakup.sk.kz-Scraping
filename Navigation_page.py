@@ -9,30 +9,30 @@ import pymysql.cursors
 from datetime import datetime
 import requests
 import html
-import urllib.request
-import urllib.parse
-from googletrans import Translator
+# import urllib.request
+# import urllib.parse
+# from googletrans import Translator
 
 
 def Local_connection_links():
     a = 0
     while a == 0:
         try:
-            File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\zakup_sk_kz\\Location For Database & Driver.txt", "r")
-            TXT_File_AllText = File_Location.read()
+            # File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\zakup_sk_kz\\Location For Database & Driver.txt", "r")
+            # TXT_File_AllText = File_Location.read()
 
-            Local_host = str(TXT_File_AllText).partition("Local_host_link=")[2].partition(",")[0].strip()
-            Local_user = str(TXT_File_AllText).partition("Local_user_link=")[2].partition(",")[0].strip()
-            Local_password = str(TXT_File_AllText).partition("Local_password_link=")[2].partition(",")[0].strip()
-            Local_db = str(TXT_File_AllText).partition("Local_db_link=")[2].partition(",")[0].strip()
-            Local_charset = str(TXT_File_AllText).partition("Local_charset_link=")[2].partition("\")")[0].strip()
+            # Local_host = str(TXT_File_AllText).partition("Local_host_link=")[2].partition(",")[0].strip()
+            # Local_user = str(TXT_File_AllText).partition("Local_user_link=")[2].partition(",")[0].strip()
+            # Local_password = str(TXT_File_AllText).partition("Local_password_link=")[2].partition(",")[0].strip()
+            # Local_db = str(TXT_File_AllText).partition("Local_db_link=")[2].partition(",")[0].strip()
+            # Local_charset = str(TXT_File_AllText).partition("Local_charset_link=")[2].partition("\")")[0].strip()
 
-            connection = pymysql.connect(host=str(Local_host) ,
-                                         user=str(Local_user) ,
-                                         password=str(Local_password) ,
-                                         db=str(Local_db) ,
-                                         charset=str(Local_charset) ,
-                                         cursorclass=pymysql.cursors.DictCursor)
+            connection = pymysql.connect(host='185.142.34.92',
+                user='ams',
+                password='TgdRKAGedt%h',
+                db='tenders_db',
+                charset='utf8',
+                cursorclass=pymysql.cursors.DictCursor)
             return connection
         except pymysql.connect  as e:
             exc_type , exc_obj , exc_tb = sys.exc_info()
@@ -64,20 +64,20 @@ def Local_connection_links():
 
 
 def Chromedriver():
-    File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\zakup_sk_kz\\Location For Database & Driver.txt", "r")
-    TXT_File_AllText = File_Location.read()
-    Chromedriver = str(TXT_File_AllText).partition("Driver=")[2].partition("\")")[0].strip()
-    browser = webdriver.Chrome(Chromedriver)
+    # File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\zakup_sk_kz\\Location For Database & Driver.txt", "r")
+    # TXT_File_AllText = File_Location.read()
+    # Chromedriver = str(TXT_File_AllText).partition("Driver=")[2].partition("\")")[0].strip()
+    # browser = webdriver.Chrome(Chromedriver)
+    browser = webdriver.Chrome(executable_path=str(f"C:\\chromedriver.exe"))
     browser.get('https://zakup.sk.kz/')
     browser.set_window_size(1024, 600)
     browser.maximize_window()
     time.sleep(2)
     Collected_T_Number = []
-    translator = Translator()
+    # translator = Translator()
     dis_Collected_T_Number = []
     TotalTenders1 = ''
-    for TotalTenders in browser.find_elements_by_xpath(
-            "//*[@id=\"infinityScroll\"]/div[13]/div[1]/jhi-item-count/div/span"):
+    for TotalTenders in browser.find_elements_by_xpath("//*[@id=\"infinityScroll\"]/div[13]/div[1]/jhi-item-count/div/span"):
         TotalTenders = TotalTenders.get_attribute('innerText')
         # translator_text = translator.translate(str(TotalTenders))
         # TotalTenders = translator_text.text
@@ -91,13 +91,11 @@ def Chromedriver():
         TotalTenders1 = str(TotalTenders)
     for i in range(350):
         try:
-
             for Tender_no in browser.find_elements_by_class_name("m-found-item__num"):
                 Tender_no = Tender_no.get_attribute('innerText').replace("№" , "").strip()
                 Collected_T_Number.append(Tender_no)
             try:
-                for Next in browser.find_elements_by_xpath(
-                        "//*[@aria-label=\"Next\"]"):
+                for Next in browser.find_elements_by_xpath("//*[@aria-label=\"Next\"]"):
                     Next.click()
                     time.sleep(3)
                     break
@@ -166,7 +164,6 @@ def Insert_process(dis_Collected_T_Number,browser):
                   exc_tb.tb_lineno)
             a = False
 
-    sys.exit()
 Chromedriver()
 
 
